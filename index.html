@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chloe Hayward W0874977 Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Screen State Controls */
+    #login-page {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(180deg, #0051a8 0%, #002d62 100%);
+      background-image: url("./assets/logon.png");
+      background-size: cover;
+      background-position: center;
+    }
+
+    #main-page {
+      display: none;
+      width: 100%;
+      height: 100vh;
+      background-image: url("./assets/logon.png");
+      background-size: cover;
+      background-position: center bottom;
+      background-repeat: no-repeat;
+      position: relative;
+    }
+
+    /* Login Page Styles */
+    .profileicon {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+    }
+
+    .profile-border {
+      width: 100%;
+      height: 100%;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+
+    .profileimg {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 100px;
+      height: 100px;
+      border-radius: 10px;
+    }
+
+    .user-details {
+      text-align: center;
+      color: #ffffff;
+      text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.6);
+      margin-bottom: 25px;
+    }
+
+    .username {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .work-title {
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.9;
+    }
+
+    .work-organization {
+      font-size: 0.95rem;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+
+    .forwardbtn {
+      background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(200,220,240,0.4) 50%, rgba(150,180,210,0.5) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 8px;
+      padding: 8px 24px;
+      color: #ffffff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 4px 15px rgba(0,0,0,0.2);
+      backdrop-filter: blur(4px);
+      transition: all 0.2s ease;
+    }
+
+    .forwardbtn:hover {
+      background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(220,240,255,0.6) 50%, rgba(180,210,240,0.7) 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 4px 20px rgba(0,100,255,0.4);
+    }
+
+    /* Main Page Elements */
+    .taskbar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 40px;
+      background: rgba(0, 10, 30, 0.4);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .startorb {
+      width: 36px;
+      height: 36px;
+      margin-left: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .startorb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .taskbaricons {
+      display: flex;
+      align-items: center;
+      margin-left: 15px;
+      flex-grow: 1;
+      gap: 8px;
+    }
+
+    .taskbarbutton {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      padding: 4px 12px;
+      color: white;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .taskbarbutton.active {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .taskbaricon {
+      width: 18px;
+      height: 18px;
+    }
+
+    .datetime {
+      color: #ffffff;
+      font-size: 0.85rem;
+      margin-right: 15px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+
+    .aeropeek {
+      width: 15px;
+      height: 100%;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+    }
+
+    /* Window Styles */
+    .window {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(25px) saturate(140%);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-top-color: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .title-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+      cursor: move;
+      user-select: none;
+    }
+
+    .title-bar .icon-wrapper {
+      display: flex;
+      align-items: center;
+    }
+
+    .title-bar img {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+    }
+
+    .title-bar-text {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .title-bar-controls button {
+      width: 26px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+      color: white;
+      cursor: pointer;
+      margin-left: 2px;
+      font-size: 0.7rem;
+      font-weight: bold;
+    }
+
+    .title-bar-controls button[aria-label="Close"]:hover {
+      background: #e81123;
+      border-color: #e81123;
+    }
+
+    .window-body {
+      background: rgba(255, 255, 255, 0.9);
+      color: #222222;
+      margin: 0 5px 5px 5px;
+      padding: 15px;
+      border-radius: 0 0 4px 4px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      font-size: 0.9rem;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+
+    /* Content Styling */
+    h2 {
+      margin-top: 0;
+      color: #004b93;
+      border-bottom: 1px solid #b1d2eb;
+      padding-bottom: 5px;
+      font-size: 1.2rem;
+    }
+
+    h3 {
+      color: #005bb7;
+      font-size: 1rem;
+      margin: 12px 0 4px 0;
+    }
+
+    p {
+      margin: 6px 0 12px 0;
+      line-height: 1.4;
+    }
+
+    ul {
+      margin: 6px 0 12px 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    .inline-profile {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .inline-profile img {
+      width: 80px;
+      height: 80px;
+      border-radius: 6px;
+      border: 1px solid #a0a0a0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .pdf-viewer-box {
+      width: 100%;
+      height: 320px;
+      border: 1px solid #a0a0a0;
+      border-radius: 4px;
+      background: #ffffff;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.15);
+      overflow-y: scroll;
+      padding: 15px;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .contact-field {
+      margin-bottom: 10px;
+    }
+
+    .contact-field strong {
+      display: inline-block;
+      width: 80px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Screen 1: Login Page -->
+  <div id="login-page">
+    <div class="profileicon">
+      <img src="./assets/profilebg.svg" class="glass profile-border">
+      <img src="./assets/profile.png" class="profileimg">
+    </div>
+    
+    <div class="user-details">
+      <div class="username">Chloe Hayward</div>
+      <div class="work-title">IT Computer Lab Technician</div>
+      <div class="work-organization">St. Clair Student Representative Council</div>
+    </div>
+
+    <button onclick="logIn()" class="forwardbtn"><u>L</u>og In</button>
+  </div>
+
+  <!-- Screen 2: Main Page Content -->
+  <div id="main-page">
+    <div class="taskbar">
+      <div class="startorb">
+        <img src="./assets/idle.png" alt="Start Menu Button">
+      </div>
+      <div class="taskbaricons">
+        <button class="taskbarbutton active" onclick="toggleWindow('win-about')">
+          <img class="taskbaricon" src="./assets/information.png"> About Me
+        </button>
+        <button class="taskbarbutton active" onclick="toggleWindow('win-work')">
+          <img class="taskbaricon" src="./assets/information.png"> Samples of Best Work
+        </button>
+        <button class="taskbarbutton active" onclick="toggleWindow('win-resume')">
+          <img class="taskbaricon" src="./assets/information.png"> Adobe Acrobat - Resume.pdf
+        </button>
+        <button class="taskbarbutton active" onclick="toggleWindow('win-contact')">
+          <img class="taskbaricon" src="./assets/information.png"> Contact Me
+        </button>
+      </div>
+      <div class="datetime" id="clock">12:00 PM</div>
+      <div class="aeropeek"></div>
+    </div>
+
+    <!-- Window 1: About Me -->
+    <div class="window" style="width: 420px; height: 340px; top: 10%; left: 8%;" id="win-about">
+      <div class="title-bar" onmousedown="initDrag(event, 'win-about')">
+        <div class="icon-wrapper">
+          <img src="./assets/information.png">
+          <div class="title-bar-text">About Me</div>
+        </div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" onclick="closeWindow('win-about')">X</button>
+        </div>
+      </div>
+      <div class="window-body">
+        <div class="inline-profile">
+          <img src="./assets/headshot.jpg" alt="Headshot">
+          <div>
+            <h2>Chloe Hayward</h2>
+            <p>IT professional and student currently pursuing a Computer Systems Networking diploma at St. Clair College, holding a Bachelor of Arts in Sociology from the University of Calgary.</p>
+          </div>
+        </div>
+        <p>Focused on expanding capabilities in technical support, infrastructure layout, network engineering, and cybersecurity implementations.</p>
+      </div>
+    </div>
+
+    <!-- Window 2: Samples of Best Work -->
+    <div class="window" style="width: 480px; height: 390px; top: 15%; left: 45%;" id="win-work">
+      <div class="title-bar" onmousedown="initDrag(event, 'win-work')">
+        <div class="icon-wrapper">
+          <img src="./assets/information.png">
+          <div class="title-bar-text">Samples of Best Work</div>
+        </div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" onclick="closeWindow('win-work')">X</button>
+        </div>
+      </div>
+      <div class="window-body">
+        <h2>Key Infrastructure & Technical Achievements</h2>
+        
+        <h3>Multi-Factor Authentication (MFA) Deployment</h3>
+        <p>Successfully managed and executed the configuration and deployment of Multi-Factor Authentication (MFA) parameters for the entire University of Calgary community, including all faculty, active staff members, and the complete student population while working at the U of C IT support centre.</p>
+        
+        <h3>Academic Technical Labs</h3>
+        <p>Designed, provisioned, and managed complex, containerized Linux server environments and network typologies, Nginx reverse proxy routing layouts, and core Cisco systems protocols as part of foundational systems coursework.</p>
+      </div>
+    </div>
+
+    <!-- Window 3: Fake PDF Reader -->
+    <div class="window" style="width: 520px; height: 460px; top: 22%; left: 24%;" id="win-resume">
+      <div class="title-bar" onmousedown="initDrag(event, 'win-resume')">
+        <div class="icon-wrapper">
+          <img src="./assets/information.png">
+          <div class="title-bar-text">Adobe Acrobat - Resume.pdf</div>
+        </div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" onclick="closeWindow('win-resume')">X</button>
+        </div>
+      </div>
+      <div class="window-body">
+        <h2 style="font-size: 1rem; color: #444; border: none; margin-bottom: 8px;">Resume.pdf</h2>
+        <div class="pdf-viewer-box">
+          <div style="text-align: center; border-bottom: 2px solid #004b93; padding-bottom: 10px; margin-bottom: 15px;">
+            <h1 style="margin: 0; font-size: 1.4rem; color: #004b93;">Chloe Hayward</h1>
+            <p style="margin: 5px 0 0 0; font-size: 0.85rem; color: #555;">IT Professional & Computer Systems Networking Student</p>
+          </div>
+          
+          <h3 style="border-bottom: 1px solid #ddd; padding-bottom: 3px; margin-top: 15px;">Education</h3>
+          <p><strong>Computer Systems Networking Diploma</strong><br>
+          St. Clair College (Expected Graduation: April 2027)</p>
+          <p><strong>Bachelor of Arts in Sociology</strong><br>
+          University of Calgary (Completed: 2024)</p>
+
+          <h3 style="border-bottom: 1px solid #ddd; padding-bottom: 3px; margin-top: 15px;">Professional Experience</h3>
+          <p><strong>IT Computer Lab Technician</strong><br>
+          St. Clair Student Representative Council | August 2025 - Present</p>
+          <ul style="margin: 5px 0; padding-left: 15px;">
+            <li>Provide deskside troubleshooting, technical support, and hardware maintenance in student spaces.</li>
+            <li>Manage and maintain computer lab systems, ensuring optimal performance and security.</li>
+          </ul>
+
+          <p><strong>Technical Support Associate</strong><br>
+          University of Calgary IT Support Centre</p>
+          <ul style="margin: 5px 0; padding-left: 15px;">
+            <li>Managed identity verification structures and security updates.</li>
+            <li>Facilitated the configuration and complete rollout of Multi-Factor Authentication (MFA) parameters across the entire University of Calgary student, staff, and faculty databases.</li>
+          </ul>
+
+          <h3 style="border-bottom: 1px solid #ddd; padding-bottom: 3px; margin-top: 15px;">Technical Core Competencies</h3>
+          <ul style="margin: 5px 0; padding-left: 15px;">
+            <li>Server Provisioning & Containerization (Docker, Linux)</li>
+            <li>Network Architecture & Reverse Proxy Layouts (Cisco, Nginx)</li>
+            <li>Identity & Access Management Integration</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Window 4: Contact Me -->
+    <div class="window" style="width: 420px; height: 240px; top: 40%; left: 12%;" id="win-contact">
+      <div class="title-bar" onmousedown="initDrag(event, 'win-contact')">
+        <div class="icon-wrapper">
+          <img src="./assets/information.png">
+          <div class="title-bar-text">Contact Me</div>
+        </div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" onclick="closeWindow('win-contact')">X</button>
+        </div>
+      </div>
+      <div class="window-body">
+        <h2>Get In Touch</h2>
+        <p>Please reach out via any of the professional channels below:</p>
+        <div class="contact-field">
+          <strong>Email:</strong> <a href="mailto:chloehayward16@gmail.com">chloehayward16@gmail.com</a>
+        </div>
+        <div class="contact-field">
+          <strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/chloe-hayward-11228134a/" target="_blank">linkedin.com/in/chloe-hayward-11228134a</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Load elements
+    window.addEventListener('DOMContentLoaded', () => {
+      updateClock();
+      setInterval(updateClock, 1000);
+    });
+
+    // Handle screen change
+    function logIn() {
+      document.getElementById('login-page').style.display = 'none';
+      document.getElementById('main-page').style.display = 'block';
+    }
+
+    function closeWindow(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function toggleWindow(id) {
+      const win = document.getElementById(id);
+      if (win.style.display === 'none') {
+        win.style.display = 'flex';
+        // Bring to front
+        win.style.zIndex = Math.max(...Array.from(document.querySelectorAll('.window')).map(w => parseInt(w.style.zIndex) || 10)) + 1;
+      } else {
+        win.style.display = 'none';
+      }
+    }
+
+    // Dynamic Clock
+    function updateClock() {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; 
+      document.getElementById('clock').textContent = `${hours}:${minutes} ${ampm}`;
+    }
+
+    // Multi-Window Drag Logic
+    let currentWin = null;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    function initDrag(e, windowId) {
+      currentWin = document.getElementById(windowId);
+      offsetX = e.clientX - currentWin.offsetLeft;
+      offsetY = e.clientY - currentWin.offsetTop;
+      
+      // Bring clicked window to front
+      const windows = Array.from(document.querySelectorAll('.window'));
+      const maxZ = Math.max(...windows.map(w => parseInt(w.style.zIndex) || 10));
+      currentWin.style.zIndex = maxZ + 1;
+      
+      document.addEventListener("mousemove", doDrag);
+      document.addEventListener("mouseup", stopDrag);
+    }
+
+    function doDrag(e) {
+      if (!currentWin) return;
+      currentWin.style.left = (e.clientX - offsetX) + "px";
+      currentWin.style.top = (e.clientY - offsetY) + "px";
+    }
+
+    function stopDrag() {
+      document.removeEventListener("mousemove", doDrag);
+      document.removeEventListener("mouseup", stopDrag);
+      currentWin = null;
+    }
+  </script>
+</body>
+</html>
